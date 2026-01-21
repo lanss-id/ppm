@@ -1,36 +1,68 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# PPM Audio Recording System
 
-## Getting Started
+Sistem recording kajian untuk PPM Muhammad Khoir, dibangun dengan Next.js dan Supabase.
 
-First, run the development server:
+## Fitur
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+- 📤 **Admin Upload** - Upload file MP3 dengan drag & drop
+- 🎵 **Audio Player** - Player lengkap dengan kontrol playback
+- 📊 **Play Count** - Tracking jumlah play per recording
+- 📁 **Archive** - Auto-archive recording lama, bisa restore
+
+## Setup
+
+### 1. Supabase Setup
+
+1. Buat project baru di [Supabase](https://supabase.com)
+2. Buka SQL Editor dan jalankan `supabase-schema.sql`
+3. Buat Storage Bucket:
+   - Nama: `recordings`
+   - Public: Yes
+   - Max file size: 50MB
+
+### 2. Environment Variables
+
+Buat file `.env.local` di root project:
+
+```env
+NEXT_PUBLIC_SUPABASE_URL=https://your-project.supabase.co
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your-anon-key
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Dapatkan credentials dari Supabase Dashboard > Settings > API
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### 3. Install & Run
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```bash
+cd ppm-audio
+npm install
+npm run dev
+```
 
-## Learn More
+Buka http://localhost:3000
 
-To learn more about Next.js, take a look at the following resources:
+## Struktur Project
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+```
+src/
+├── app/
+│   ├── admin/page.tsx      # Halaman upload admin
+│   ├── player/page.tsx     # Halaman audio player
+│   └── api/recordings/     # API routes
+├── components/
+│   ├── AudioPlayer.tsx     # Komponen player
+│   ├── RecordingUpload.tsx # Komponen upload
+│   └── RecordingList.tsx   # List recordings
+└── lib/
+    ├── supabase.ts         # Supabase client
+    └── types.ts            # TypeScript types
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Kategori Recording
 
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- Tafsir Al-Qur'an
+- Hadits
+- Fiqih
+- Akhlak & Tasawuf
+- Sirah Nabawiyah
+- Mutiara Hikmah
