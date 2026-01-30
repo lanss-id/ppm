@@ -2,6 +2,7 @@
 
 import { useState, useRef, useEffect } from 'react';
 import { Recording, formatDate } from '@/lib/types';
+import { Mic, Music, SkipBack, SkipForward, Play, Pause, Repeat, Volume2, VolumeX } from 'lucide-react';
 
 interface AudioPlayerProps {
     recording: Recording | null;
@@ -30,7 +31,7 @@ export default function AudioPlayer({ recording, onPlayCountUpdate }: AudioPlaye
 
         const interval = setInterval(() => {
             setWaveformHeights(prev =>
-                prev.map((h, i) => {
+                prev.map((h) => {
                     // Create wave-like pattern with some randomness
                     const baseChange = (Math.random() - 0.5) * 40;
                     const newHeight = h + baseChange;
@@ -146,7 +147,7 @@ export default function AudioPlayer({ recording, onPlayCountUpdate }: AudioPlaye
         return (
             <div className="bg-gradient-to-br from-gray-400 to-gray-600 rounded-3xl shadow-2xl p-8 text-white mb-8">
                 <div className="text-center py-12">
-                    <i className="fas fa-music text-6xl opacity-50 mb-4"></i>
+                    <Music className="w-16 h-16 opacity-50 mx-auto mb-4" />
                     <p className="text-xl opacity-75">Belum ada recording aktif</p>
                 </div>
             </div>
@@ -165,7 +166,7 @@ export default function AudioPlayer({ recording, onPlayCountUpdate }: AudioPlaye
 
             <div className="text-center mb-8">
                 <div className="inline-block bg-white bg-opacity-20 rounded-full p-8 mb-6">
-                    <i className="fas fa-microphone text-6xl"></i>
+                    <Mic className="w-16 h-16" />
                 </div>
                 <h2 className="text-3xl font-bold mb-2">{recording.title}</h2>
                 <p className="text-green-200 text-lg mb-1">{recording.speaker}</p>
@@ -196,7 +197,7 @@ export default function AudioPlayer({ recording, onPlayCountUpdate }: AudioPlaye
                     max="100"
                     value={duration ? (currentTime / duration) * 100 : 0}
                     onChange={handleSeek}
-                    className="w-full h-2 bg-white bg-opacity-30 rounded-full border-1 border-white appearance-none cursor-pointer"
+                    className="w-full h-2 pt-1 border border-white/50 bg-opacity-30 rounded-full border-1 border-white appearance-none cursor-pointer"
                 />
                 <div className="flex justify-between text-sm mt-2">
                     <span>{formatTime(currentTime)}</span>
@@ -211,7 +212,7 @@ export default function AudioPlayer({ recording, onPlayCountUpdate }: AudioPlaye
                     className="hover:scale-110 transition relative group"
                     title="Kembali 5 detik"
                 >
-                    <i className="fas fa-backward text-2xl"></i>
+                    <SkipBack size={28} />
                     <span className="absolute -bottom-8 left-1/2 -translate-x-1/2 bg-black bg-opacity-75 text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition whitespace-nowrap">
                         Kembali 5 detik
                     </span>
@@ -220,14 +221,14 @@ export default function AudioPlayer({ recording, onPlayCountUpdate }: AudioPlaye
                     onClick={togglePlay}
                     className="bg-white text-green-600 rounded-full w-16 h-16 flex items-center justify-center hover:scale-110 transition shadow-lg"
                 >
-                    <i className={`fas ${isPlaying ? 'fa-pause' : 'fa-play ml-1'} text-2xl`}></i>
+                    {isPlaying ? <Pause size={28} /> : <Play size={28} className="ml-1" />}
                 </button>
                 <button
                     onClick={() => skip(5)}
                     className="hover:scale-110 transition relative group"
                     title="Lewati 5 detik"
                 >
-                    <i className="fas fa-forward text-2xl"></i>
+                    <SkipForward size={28} />
                     <span className="absolute -bottom-8 left-1/2 -translate-x-1/2 bg-black bg-opacity-75 text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition whitespace-nowrap">
                         Lewati 5 detik
                     </span>
@@ -248,12 +249,12 @@ export default function AudioPlayer({ recording, onPlayCountUpdate }: AudioPlaye
                         className={`px-3 py-2 rounded-lg transition text-green-600 ${isRepeating ? 'bg-white bg-opacity-40' : 'bg-white bg-opacity-20 hover:bg-opacity-30'
                             }`}
                     >
-                        <i className="fas fa-repeat"></i>
+                        <Repeat size={18} />
                     </button>
                 </div>
                 <div className="flex items-center gap-3">
                     <button onClick={toggleMute}>
-                        <i className={`fas ${isMuted ? 'fa-volume-mute' : 'fa-volume-up'} text-xl`}></i>
+                        {isMuted ? <VolumeX size={22} /> : <Volume2 size={22} />}
                     </button>
                     <input
                         type="range"
@@ -261,7 +262,7 @@ export default function AudioPlayer({ recording, onPlayCountUpdate }: AudioPlaye
                         max="100"
                         value={isMuted ? 0 : volume * 100}
                         onChange={handleVolumeChange}
-                        className="w-24 h-1 bg-white bg-opacity-30 rounded-full appearance-none cursor-pointer"
+                        className="w-24 h-2 pt-1 border border-white/50 bg-opacity-30 rounded-full appearance-none cursor-pointer"
                     />
                 </div>
             </div>

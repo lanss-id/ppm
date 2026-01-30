@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { Headphones, Zap, Leaf, ArrowLeft, BookOpen, BookOpenText } from 'lucide-react';
 
 interface ClassSelectionProps {
     onSelect: (kelas: string, kajian: string) => void;
@@ -29,7 +30,7 @@ export default function ClassSelection({ onSelect }: ClassSelectionProps) {
                 {/* Header */}
                 <div className="text-center mb-10">
                     <div className="inline-block bg-green-100 text-green-600 p-4 rounded-full mb-4">
-                        <i className="fas fa-headphones text-4xl"></i>
+                        <Headphones size={40} />
                     </div>
                     <h1 className="text-3xl font-bold text-gray-800 mb-2">
                         {selectedKelas ? 'Pilih Mangkulan' : 'Pilih Kelas'}
@@ -51,7 +52,7 @@ export default function ClassSelection({ onSelect }: ClassSelectionProps) {
                             >
                                 <div className="text-center">
                                     <div className="bg-gradient-to-br from-orange-400 to-orange-600 text-white w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform shadow-lg">
-                                        <i className="fas fa-bolt text-3xl"></i>
+                                        <Zap size={32} />
                                     </div>
                                     <h3 className="text-2xl font-bold text-gray-800 mb-2">Cepatan</h3>
                                 </div>
@@ -63,7 +64,7 @@ export default function ClassSelection({ onSelect }: ClassSelectionProps) {
                             >
                                 <div className="text-center">
                                     <div className="bg-gradient-to-br from-blue-400 to-blue-600 text-white w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform shadow-lg">
-                                        <i className="fas fa-leaf text-3xl"></i>
+                                        <Leaf size={32} />
                                     </div>
                                     <h3 className="text-2xl font-bold text-gray-800 mb-2">Lambatan</h3>
                                 </div>
@@ -80,7 +81,7 @@ export default function ClassSelection({ onSelect }: ClassSelectionProps) {
                             onClick={handleBack}
                             className="mb-6 text-gray-600 hover:text-green-600 transition flex items-center gap-2"
                         >
-                            <i className="fas fa-arrow-left"></i>
+                            <ArrowLeft size={18} />
                             <span>Kembali pilih kelas</span>
                         </button>
 
@@ -91,7 +92,7 @@ export default function ClassSelection({ onSelect }: ClassSelectionProps) {
                             >
                                 <div className="text-center">
                                     <div className="bg-gradient-to-br from-emerald-400 to-emerald-600 text-white w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform shadow-lg">
-                                        <i className="fas fa-quran text-3xl"></i>
+                                        <BookOpenText size={32} />
                                     </div>
                                     <h3 className="text-2xl font-bold text-gray-800 mb-2">Al-Qur'an</h3>
                                 </div>
@@ -103,7 +104,7 @@ export default function ClassSelection({ onSelect }: ClassSelectionProps) {
                             >
                                 <div className="text-center">
                                     <div className="bg-gradient-to-br from-amber-400 to-amber-600 text-white w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform shadow-lg">
-                                        <i className="fas fa-book text-3xl"></i>
+                                        <BookOpen size={32} />
                                     </div>
                                     <h3 className="text-2xl font-bold text-gray-800 mb-2">Hadits</h3>
                                 </div>

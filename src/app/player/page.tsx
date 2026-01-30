@@ -1,10 +1,11 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import PlayerHeader from '@/components/PlayerHeader';
 import ClassSelection from '@/components/ClassSelection';
 import AudioPlayer from '@/components/AudioPlayer';
 import { Recording, formatDate, formatDurationDisplay } from '@/lib/types';
+import { ArrowLeft, Zap, Leaf, Loader2, Clock, Headphones, Calendar } from 'lucide-react';
 
 export default function PlayerPage() {
     const [selectedClass, setSelectedClass] = useState<{ kelas: string; kajian: string } | null>(null);
@@ -74,7 +75,7 @@ export default function PlayerPage() {
                             onClick={handleBackToMenu}
                             className="mb-6 text-gray-600 hover:text-green-600 transition flex items-center gap-2"
                         >
-                            <i className="fas fa-arrow-left"></i>
+                            <ArrowLeft size={18} />
                             <span>Kembali ke pilihan kelas</span>
                         </button>
 
@@ -84,7 +85,7 @@ export default function PlayerPage() {
                                 ? 'bg-orange-100 text-orange-600'
                                 : 'bg-blue-100 text-blue-600'
                                 }`}>
-                                <i className={`fas ${selectedClass.kelas === 'cepatan' ? 'fa-bolt' : 'fa-leaf'} text-xl`}></i>
+                                {selectedClass.kelas === 'cepatan' ? <Zap size={24} /> : <Leaf size={24} />}
                             </div>
                             <div>
                                 <p className="font-semibold text-gray-800">
@@ -96,7 +97,7 @@ export default function PlayerPage() {
 
                         {loading ? (
                             <div className="text-center py-16">
-                                <i className="fas fa-spinner fa-spin text-4xl text-green-600"></i>
+                                <Loader2 className="w-10 h-10 text-green-600 animate-spin mx-auto" />
                                 <p className="mt-4 text-gray-600">Memuat recording...</p>
                             </div>
                         ) : (
@@ -124,17 +125,17 @@ export default function PlayerPage() {
                                         </p>
                                         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-center">
                                             <div className="bg-gray-50 rounded-lg p-4">
-                                                <i className="fas fa-clock text-green-600 text-2xl mb-2"></i>
+                                                <Clock className="w-8 h-8 text-green-600 mx-auto mb-2" />
                                                 <p className="text-sm text-gray-600">Durasi</p>
                                                 <p className="font-semibold text-gray-800">{formatDurationDisplay(activeRecording.duration)}</p>
                                             </div>
                                             <div className="bg-gray-50 rounded-lg p-4">
-                                                <i className="fas fa-headphones text-green-600 text-2xl mb-2"></i>
+                                                <Headphones className="w-8 h-8 text-green-600 mx-auto mb-2" />
                                                 <p className="text-sm text-gray-600">Didengar</p>
                                                 <p className="font-semibold text-gray-800">{activeRecording.play_count} kali</p>
                                             </div>
                                             <div className="bg-gray-50 rounded-lg p-4">
-                                                <i className="fas fa-calendar text-green-600 text-2xl mb-2"></i>
+                                                <Calendar className="w-8 h-8 text-green-600 mx-auto mb-2" />
                                                 <p className="text-sm text-gray-600">Tanggal</p>
                                                 <p className="font-semibold text-gray-800">{formatDate(activeRecording.date)}</p>
                                             </div>

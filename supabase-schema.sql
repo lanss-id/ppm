@@ -1,14 +1,16 @@
--- PPM Audio Recording System - Database Schema
+-- PPM Complete Database Schema
 -- Run this SQL in your Supabase SQL Editor
 
--- 1. Create recordings table
+-- ============================================
+-- RECORDINGS TABLE (existing)
+-- ============================================
 CREATE TABLE IF NOT EXISTS recordings (
   id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
   title VARCHAR(255) NOT NULL,
   speaker VARCHAR(255) NOT NULL,
   date DATE NOT NULL,
-  kelas VARCHAR(20) NOT NULL DEFAULT 'cepatan', -- 'cepatan' or 'lambatan'
-  mangkulan VARCHAR(20) NOT NULL DEFAULT 'quran', -- 'quran' or 'hadits'
+  kelas VARCHAR(20) NOT NULL DEFAULT 'cepatan',
+  mangkulan VARCHAR(20) NOT NULL DEFAULT 'quran',
   description TEXT,
   file_url TEXT NOT NULL,
   file_name VARCHAR(255) NOT NULL,
@@ -20,51 +22,188 @@ CREATE TABLE IF NOT EXISTS recordings (
   updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
 );
 
--- If table already exists, update columns
-ALTER TABLE recordings ADD COLUMN IF NOT EXISTS kelas VARCHAR(20) DEFAULT 'cepatan';
-ALTER TABLE recordings ADD COLUMN IF NOT EXISTS mangkulan VARCHAR(20) DEFAULT 'quran';
+-- ============================================
+-- SANTRI TABLE
+-- ============================================
+CREATE TABLE IF NOT EXISTS santri (
+  id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+  nama VARCHAR(255) NOT NULL,
+  nis VARCHAR(20) UNIQUE NOT NULL,
+  kampus VARCHAR(255) NOT NULL,
+  angkatan INTEGER NOT NULL,
+  phone VARCHAR(20),
+  email VARCHAR(255),
+  alamat TEXT,
+  photo_url TEXT,
+  status VARCHAR(20) DEFAULT 'aktif', -- 'aktif', 'alumni', 'cuti'
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+  updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
 
--- Remove category column (no longer used)
-ALTER TABLE recordings DROP COLUMN IF EXISTS category;
+-- ============================================
+-- PENDAFTARAN TABLE
+-- ============================================
+CREATE TABLE IF NOT EXISTS pendaftaran (
+  id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+  nama VARCHAR(255) NOT NULL,
+  kampus VARCHAR(255) NOT NULL,
+  jurusan VARCHAR(255),
+  phone VARCHAR(20) NOT NULL,
+  email VARCHAR(255),
+  alamat TEXT,
+  motivasi TEXT,
+  status VARCHAR(20) DEFAULT 'pending', -- 'pending', 'approved', 'rejected'
+  reviewed_by UUID,
+  reviewed_at TIMESTAMP WITH TIME ZONE,
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
 
--- 2. Enable Row Level Security
+-- ============================================
+-- BERITA TABLE
+-- ============================================
+CREATE TABLE IF NOT EXISTS berita (
+  id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+  title VARCHAR(255) NOT NULL,
+  content TEXT NOT NULL,
+  excerpt TEXT,
+  image_url TEXT,
+  category VARCHAR(50) DEFAULT 'umum', -- 'umum', 'kajian', 'prestasi', 'pengumuman'
+  status VARCHAR(20) DEFAULT 'draft', -- 'draft', 'published'
+  published_at TIMESTAMP WITH TIME ZONE,
+  author_id UUID,
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+  updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
+
+-- ============================================
+-- PENGURUS TABLE
+-- ============================================
+CREATE TABLE IF NOT EXISTS pengurus (
+  id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+  nama VARCHAR(255) NOT NULL,
+  jabatan VARCHAR(255) NOT NULL,
+  phone VARCHAR(20),
+  email VARCHAR(255),
+  photo_url TEXT,
+  periode VARCHAR(20),
+  is_active BOOLEAN DEFAULT true,
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
+
+-- ============================================
+-- ROW LEVEL SECURITY
+-- ============================================
 ALTER TABLE recordings ENABLE ROW LEVEL SECURITY;
+ALTER TABLE santri ENABLE ROW LEVEL SECURITY;
+ALTER TABLE pendaftaran ENABLE ROW LEVEL SECURITY;
+ALTER TABLE berita ENABLE ROW LEVEL SECURITY;
+ALTER TABLE pengurus ENABLE ROW LEVEL SECURITY;
 
--- 3. Create policies for public access (development)
--- Allow anyone to read recordings
-CREATE POLICY "Allow public read" ON recordings 
-  FOR SELECT USING (true);
+-- Drop existing policies first (safe to run multiple times)
+DROP POLICY IF EXISTS "Allow public read recordings" ON recordings;
+DROP POLICY IF EXISTS "Allow public read santri" ON santri;
+DROP POLICY IF EXISTS "Allow public read pendaftaran" ON pendaftaran;
+DROP POLICY IF EXISTS "Allow public read berita" ON berita;
+DROP POLICY IF EXISTS "Allow public read pengurus" ON pengurus;
 
--- Allow anyone to insert recordings
-CREATE POLICY "Allow public insert" ON recordings 
-  FOR INSERT WITH CHECK (true);
+DROP POLICY IF EXISTS "Allow public insert recordings" ON recordings;
+DROP POLICY IF EXISTS "Allow public update recordings" ON recordings;
+DROP POLICY IF EXISTS "Allow public delete recordings" ON recordings;
 
--- Allow anyone to update recordings
-CREATE POLICY "Allow public update" ON recordings 
-  FOR UPDATE USING (true);
+DROP POLICY IF EXISTS "Allow public insert santri" ON santri;
+DROP POLICY IF EXISTS "Allow public update santri" ON santri;
+DROP POLICY IF EXISTS "Allow public delete santri" ON santri;
 
--- Allow anyone to delete recordings
-CREATE POLICY "Allow public delete" ON recordings 
-  FOR DELETE USING (true);
+DROP POLICY IF EXISTS "Allow public insert pendaftaran" ON pendaftaran;
+DROP POLICY IF EXISTS "Allow public update pendaftaran" ON pendaftaran;
+DROP POLICY IF EXISTS "Allow public delete pendaftaran" ON pendaftaran;
 
--- 4. Create index for better query performance
-CREATE INDEX idx_recordings_is_active ON recordings(is_active);
-CREATE INDEX idx_recordings_created_at ON recordings(created_at DESC);
+DROP POLICY IF EXISTS "Allow public insert berita" ON berita;
+DROP POLICY IF EXISTS "Allow public update berita" ON berita;
+DROP POLICY IF EXISTS "Allow public delete berita" ON berita;
+
+DROP POLICY IF EXISTS "Allow public insert pengurus" ON pengurus;
+DROP POLICY IF EXISTS "Allow public update pengurus" ON pengurus;
+DROP POLICY IF EXISTS "Allow public delete pengurus" ON pengurus;
+
+-- Public read policies
+CREATE POLICY "Allow public read recordings" ON recordings FOR SELECT USING (true);
+CREATE POLICY "Allow public read santri" ON santri FOR SELECT USING (true);
+CREATE POLICY "Allow public read pendaftaran" ON pendaftaran FOR SELECT USING (true);
+CREATE POLICY "Allow public read berita" ON berita FOR SELECT USING (true);
+CREATE POLICY "Allow public read pengurus" ON pengurus FOR SELECT USING (true);
+
+-- Public write policies (for development - restrict in production)
+CREATE POLICY "Allow public insert recordings" ON recordings FOR INSERT WITH CHECK (true);
+CREATE POLICY "Allow public update recordings" ON recordings FOR UPDATE USING (true);
+CREATE POLICY "Allow public delete recordings" ON recordings FOR DELETE USING (true);
+
+CREATE POLICY "Allow public insert santri" ON santri FOR INSERT WITH CHECK (true);
+CREATE POLICY "Allow public update santri" ON santri FOR UPDATE USING (true);
+CREATE POLICY "Allow public delete santri" ON santri FOR DELETE USING (true);
+
+CREATE POLICY "Allow public insert pendaftaran" ON pendaftaran FOR INSERT WITH CHECK (true);
+CREATE POLICY "Allow public update pendaftaran" ON pendaftaran FOR UPDATE USING (true);
+CREATE POLICY "Allow public delete pendaftaran" ON pendaftaran FOR DELETE USING (true);
+
+CREATE POLICY "Allow public insert berita" ON berita FOR INSERT WITH CHECK (true);
+CREATE POLICY "Allow public update berita" ON berita FOR UPDATE USING (true);
+CREATE POLICY "Allow public delete berita" ON berita FOR DELETE USING (true);
+
+CREATE POLICY "Allow public insert pengurus" ON pengurus FOR INSERT WITH CHECK (true);
+CREATE POLICY "Allow public update pengurus" ON pengurus FOR UPDATE USING (true);
+CREATE POLICY "Allow public delete pengurus" ON pengurus FOR DELETE USING (true);
 
 -- ============================================
--- STORAGE BUCKET SETUP
+-- INDEXES
 -- ============================================
--- Go to Storage in Supabase Dashboard and:
--- 1. Create a new bucket named "recordings"
--- 2. Make it PUBLIC
--- 3. Set max file size to 50MB
--- 4. Add policy to allow public uploads:
---
--- CREATE POLICY "Allow public upload" ON storage.objects
---   FOR INSERT WITH CHECK (bucket_id = 'recordings');
---
--- CREATE POLICY "Allow public read" ON storage.objects
---   FOR SELECT USING (bucket_id = 'recordings');
---
--- CREATE POLICY "Allow public delete" ON storage.objects
---   FOR DELETE USING (bucket_id = 'recordings');
+CREATE INDEX IF NOT EXISTS idx_santri_status ON santri(status);
+CREATE INDEX IF NOT EXISTS idx_santri_angkatan ON santri(angkatan);
+CREATE INDEX IF NOT EXISTS idx_pendaftaran_status ON pendaftaran(status);
+CREATE INDEX IF NOT EXISTS idx_berita_status ON berita(status);
+CREATE INDEX IF NOT EXISTS idx_berita_published_at ON berita(published_at DESC);
+
+-- ============================================
+-- USERS PROFILE TABLE (for role-based auth)
+-- ============================================
+CREATE TABLE IF NOT EXISTS users_profile (
+  id UUID PRIMARY KEY REFERENCES auth.users(id) ON DELETE CASCADE,
+  email TEXT NOT NULL,
+  nama TEXT,
+  role TEXT DEFAULT 'guest' CHECK (role IN ('admin', 'guru', 'guest')),
+  created_at TIMESTAMPTZ DEFAULT NOW(),
+  updated_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+-- Enable RLS for users_profile
+ALTER TABLE users_profile ENABLE ROW LEVEL SECURITY;
+
+-- Drop existing policies
+DROP POLICY IF EXISTS "Users can read own profile" ON users_profile;
+DROP POLICY IF EXISTS "Users can update own profile" ON users_profile;
+DROP POLICY IF EXISTS "Allow insert for authenticated users" ON users_profile;
+DROP POLICY IF EXISTS "Allow public read users_profile" ON users_profile;
+
+-- Policies for users_profile
+CREATE POLICY "Allow public read users_profile" ON users_profile FOR SELECT USING (true);
+CREATE POLICY "Users can update own profile" ON users_profile FOR UPDATE USING (auth.uid() = id);
+CREATE POLICY "Allow insert for authenticated users" ON users_profile FOR INSERT WITH CHECK (auth.uid() = id);
+
+-- Function to auto-create profile on user signup
+CREATE OR REPLACE FUNCTION public.handle_new_user()
+RETURNS trigger AS $$
+BEGIN
+  INSERT INTO public.users_profile (id, email, nama, role)
+  VALUES (new.id, new.email, new.raw_user_meta_data->>'nama', 'guest');
+  RETURN new;
+END;
+$$ LANGUAGE plpgsql SECURITY DEFINER;
+
+-- Trigger for auto-create profile
+DROP TRIGGER IF EXISTS on_auth_user_created ON auth.users;
+CREATE TRIGGER on_auth_user_created
+  AFTER INSERT ON auth.users
+  FOR EACH ROW EXECUTE FUNCTION public.handle_new_user();
+
+-- Index for users_profile
+CREATE INDEX IF NOT EXISTS idx_users_profile_role ON users_profile(role);

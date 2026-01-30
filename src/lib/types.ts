@@ -26,9 +26,9 @@ export interface RecordingFormData {
 }
 
 export const GURU_OPTIONS = [
-    { value: 'Pak Asa', label: 'Pak Asa' },
-    { value: 'Pak Yakub', label: 'Pak Yakub' },
-    { value: 'Pak Hilal', label: 'Pak Hilal' },
+    { value: 'Pak Asa', label: 'Bp. Asa Nurpriyanto Syahputra' },
+    { value: 'Pak Yakub', label: 'Bp. Yakub Maulana Nastain' },
+    { value: 'Pak Hilal', label: 'Bp. Mohamad Hilal' },
 ] as const;
 
 export const KELAS_OPTIONS = [
@@ -84,3 +84,102 @@ export function formatDurationDisplay(duration: string | undefined): string {
 
     return '0:00:00';
 }
+
+// ============================================
+// Santri Types
+// ============================================
+export interface Santri {
+    id: string;
+    nama: string;
+    nis: string;
+    kampus: string;
+    angkatan: number;
+    phone?: string;
+    email?: string;
+    alamat?: string;
+    photo_url?: string;
+    status: 'aktif' | 'alumni' | 'cuti';
+    created_at: string;
+    updated_at: string;
+}
+
+export interface SantriFormData {
+    nama: string;
+    nis: string;
+    kampus: string;
+    angkatan: number;
+    phone?: string;
+    email?: string;
+    alamat?: string;
+    status: 'aktif' | 'alumni' | 'cuti';
+}
+
+// ============================================
+// Pendaftaran Types
+// ============================================
+export interface Pendaftaran {
+    id: string;
+    nama: string;
+    kampus: string;
+    jurusan?: string;
+    phone: string;
+    email?: string;
+    alamat?: string;
+    motivasi?: string;
+    status: 'pending' | 'approved' | 'rejected';
+    reviewed_by?: string;
+    reviewed_at?: string;
+    created_at: string;
+}
+
+// ============================================
+// Berita Types
+// ============================================
+export interface Berita {
+    id: string;
+    title: string;
+    content: string;
+    excerpt?: string;
+    image_url?: string;
+    category: 'umum' | 'kajian' | 'prestasi' | 'pengumuman';
+    status: 'draft' | 'published';
+    published_at?: string;
+    author_id?: string;
+    created_at: string;
+    updated_at: string;
+}
+
+// ============================================
+// Pengurus Types
+// ============================================
+export interface Pengurus {
+    id: string;
+    nama: string;
+    jabatan: string;
+    phone?: string;
+    email?: string;
+    photo_url?: string;
+    periode?: string;
+    is_active: boolean;
+    created_at: string;
+}
+
+export const STATUS_SANTRI_OPTIONS = [
+    { value: 'aktif', label: 'Aktif' },
+    { value: 'alumni', label: 'Alumni' },
+    { value: 'cuti', label: 'Cuti' },
+] as const;
+
+export const STATUS_PENDAFTARAN_OPTIONS = [
+    { value: 'pending', label: 'Menunggu' },
+    { value: 'approved', label: 'Diterima' },
+    { value: 'rejected', label: 'Ditolak' },
+] as const;
+
+export const CATEGORY_BERITA_OPTIONS = [
+    { value: 'umum', label: 'Umum' },
+    { value: 'kajian', label: 'Kajian' },
+    { value: 'prestasi', label: 'Prestasi' },
+    { value: 'pengumuman', label: 'Pengumuman' },
+] as const;
+

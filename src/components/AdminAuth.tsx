@@ -1,95 +1,90 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useEffect } from 'react';
+import { useRouter } from 'next/navigation';
+import { useAuth } from '@/context/AuthContext';
+import { Loader2, ShieldX } from 'lucide-react';
+import Link from 'next/link';
 
 interface AdminAuthProps {
     children: React.ReactNode;
 }
 
-const ADMIN_PIN = '1234'; // PIN default, bisa diganti
-
 export default function AdminAuth({ children }: AdminAuthProps) {
-    const [isAuthenticated, setIsAuthenticated] = useState(false);
-    const [pin, setPin] = useState('');
-    const [error, setError] = useState('');
-    const [isLoading, setIsLoading] = useState(true);
+    const router = useRouter();
+    const { user, profile, loading, profileLoading, canAccessAdmin, signOut } = useAuth();
 
+    // Combined loading state - wait for BOTH auth and profile
+    const isInitializing = loading || profileLoading;
+
+    // Redirect to login if not authenticated (only after loading complete)
     useEffect(() => {
-        // Check if already authenticated in session
-        const auth = sessionStorage.getItem('ppm_admin_auth');
-        if (auth === 'true') {
-            setIsAuthenticated(true);
+        if (!isInitializing && !user) {
+            router.push('/auth/login');
         }
-        setIsLoading(false);
-    }, []);
+    }, [isInitializing, user, router]);
 
-    const handleSubmit = (e: React.FormEvent) => {
-        e.preventDefault();
-        if (pin === ADMIN_PIN) {
-            setIsAuthenticated(true);
-            sessionStorage.setItem('ppm_admin_auth', 'true');
-            setError('');
-        } else {
-            setError('PIN salah. Silakan coba lagi.');
-            setPin('');
-        }
-    };
-
-    if (isLoading) {
+    // Show loading state while auth OR profile is loading
+    if (isInitializing) {
         return (
             <div className="min-h-screen bg-gray-100 flex items-center justify-center">
-                <i className="fas fa-spinner fa-spin text-4xl text-green-600"></i>
+                <div className="text-center">
+                    <Loader2 className="w-10 h-10 text-emerald-600 animate-spin mx-auto mb-4" />
+                    <p className="text-gray-600">Memuat data...</p>
+                </div>
             </div>
         );
     }
 
-    if (!isAuthenticated) {
+    // Not logged in - redirect handled above
+    if (!user) {
+        return (
+            <div className="min-h-screen bg-gray-100 flex items-center justify-center">
+                <div className="text-center">
+                    <Loader2 className="w-10 h-10 text-emerald-600 animate-spin mx-auto mb-4" />
+                    <p className="text-gray-600">Mengalihkan ke login...</p>
+                </div>
+            </div>
+        );
+    }
+
+    // Logged in but no admin/guru access
+    if (!canAccessAdmin) {
         return (
             <div className="min-h-screen bg-gray-100 flex items-center justify-center px-4">
-                <div className="bg-white rounded-2xl shadow-xl p-8 w-full max-w-md">
-                    <div className="text-center mb-8">
-                        <div className="inline-block bg-green-100 text-green-600 p-4 rounded-full mb-4">
-                            <i className="fas fa-lock text-3xl"></i>
-                        </div>
-                        <h1 className="text-2xl font-bold text-gray-800">Admin Access</h1>
-                        <p className="text-gray-600 mt-2">Masukkan PIN untuk mengakses halaman admin</p>
+                <div className="bg-white rounded-2xl shadow-xl p-8 w-full max-w-md text-center">
+                    <div className="inline-block bg-red-100 text-red-600 p-4 rounded-full mb-4">
+                        <ShieldX className="w-8 h-8" />
                     </div>
-
-                    <form onSubmit={handleSubmit}>
-                        <div className="mb-6">
-                            <input
-                                type="password"
-                                placeholder="Masukkan PIN"
-                                value={pin}
-                                onChange={(e) => setPin(e.target.value)}
-                                className="w-full px-4 py-4 text-center text-2xl tracking-widest border-2 rounded-xl focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
-                                maxLength={10}
-                                autoFocus
-                            />
-                            {error && (
-                                <p className="text-red-500 text-sm text-center mt-2">{error}</p>
-                            )}
+                    <h1 className="text-2xl font-bold text-gray-800 mb-2">Akses Ditolak</h1>
+                    <p className="text-gray-600 mb-6">
+                        Akun Anda ({profile?.email}) tidak memiliki akses ke halaman admin.
+                        Hanya akun dengan role <strong>Admin</strong> atau <strong>Guru</strong> yang dapat mengakses.
+                    </p>
+                    <div className="space-y-3">
+                        <p className="text-sm text-gray-500">
+                            Role Anda saat ini: <span className="font-semibold capitalize">{profile?.role || 'Guest'}</span>
+                        </p>
+                        <div className="flex gap-3">
+                            <button
+                                onClick={signOut}
+                                className="flex-1 px-4 py-3 border border-gray-300 text-gray-700 rounded-xl hover:bg-gray-50 transition"
+                            >
+                                Logout
+                            </button>
+                            <Link
+                                href="/"
+                                className="flex-1 px-4 py-3 bg-emerald-600 text-white rounded-xl hover:bg-emerald-700 transition text-center"
+                            >
+                                Ke Beranda
+                            </Link>
                         </div>
-
-                        <button
-                            type="submit"
-                            className="w-full bg-green-600 text-white py-4 rounded-xl font-semibold hover:bg-green-700 transition"
-                        >
-                            <i className="fas fa-sign-in-alt mr-2"></i>
-                            Masuk
-                        </button>
-                    </form>
-
-                    <div className="mt-6 text-center">
-                        <a href="/player" className="text-gray-500 hover:text-green-600 text-sm">
-                            <i className="fas fa-arrow-left mr-2"></i>
-                            Kembali ke Player
-                        </a>
                     </div>
                 </div>
             </div>
         );
     }
 
+    // Has access - render children
     return <>{children}</>;
 }
