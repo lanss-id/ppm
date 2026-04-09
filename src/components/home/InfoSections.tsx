@@ -1,7 +1,6 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import { GlassCard } from '@/components/ui/GlassCard';
 import {
     BookOpen,
     GraduationCap,
@@ -21,24 +20,64 @@ import {
     Youtube,
 } from 'lucide-react';
 
+// ── Reusable white card ──────────────────────────────────────────────────────
+function WhiteCard({
+    children,
+    delay = 0,
+    className = '',
+}: {
+    children: React.ReactNode;
+    delay?: number;
+    className?: string;
+}) {
+    return (
+        <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ delay }}
+            className={`bg-white border border-emerald-100 rounded-2xl p-6 shadow-sm hover:shadow-md hover:border-emerald-300 transition-all ${className}`}
+        >
+            {children}
+        </motion.div>
+    );
+}
+
+// ── Section header ornament ──────────────────────────────────────────────────
+function SectionOrnament() {
+    return (
+        <div className="flex items-center justify-center gap-3 mb-4">
+            <div className="h-px w-12 bg-gradient-to-r from-transparent to-emerald-400" />
+            <span className="text-emerald-500 text-lg select-none">❋</span>
+            <div className="h-px w-12 bg-gradient-to-l from-transparent to-emerald-400" />
+        </div>
+    );
+}
+
 // ============================================
 // ABOUT SECTION
 // ============================================
 export function AboutSection() {
     return (
-        <section id="profil" className="py-24 relative">
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <section id="profil" className="py-24 relative bg-white">
+            {/* Subtle top pattern strip */}
+            <div className="absolute inset-0 islamic-pattern opacity-[0.025]" />
+
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
                 <motion.div
                     initial={{ opacity: 0, y: 20 }}
                     whileInView={{ opacity: 1, y: 0 }}
                     viewport={{ once: true }}
                     className="text-center mb-16"
                 >
-                    <span className="text-emerald-400 font-medium mb-2 block">Tentang Kami</span>
-                    <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
+                    <SectionOrnament />
+                    <span className="text-emerald-600 font-semibold mb-2 block tracking-widest text-sm uppercase">
+                        Tentang Kami
+                    </span>
+                    <h2 className="text-3xl md:text-4xl font-bold text-gray-800 mb-4">
                         Profil PPM Minhajul Haq
                     </h2>
-                    <p className="text-gray-400 max-w-2xl mx-auto">
+                    <p className="text-gray-500 max-w-2xl mx-auto">
                         Lembaga pendidikan agama Islam yang berlokasi strategis di tengah Kota Bandung
                     </p>
                 </motion.div>
@@ -50,7 +89,7 @@ export function AboutSection() {
                     viewport={{ once: true }}
                     className="mb-16"
                 >
-                    <GlassCard delay={0.1} className="p-0 overflow-hidden">
+                    <div className="bg-white border border-emerald-100 rounded-3xl overflow-hidden shadow-md">
                         <div className="aspect-video w-full">
                             <iframe
                                 src="https://www.youtube.com/embed/E0k9bXSnx58"
@@ -63,7 +102,7 @@ export function AboutSection() {
                                 className="rounded-3xl"
                             />
                         </div>
-                    </GlassCard>
+                    </div>
                 </motion.div>
 
                 <div className="grid md:grid-cols-2 gap-8 items-center">
@@ -74,23 +113,23 @@ export function AboutSection() {
                         viewport={{ once: true }}
                         className="space-y-6"
                     >
-                        <p className="text-gray-300 text-lg leading-relaxed">
+                        <p className="text-gray-600 text-lg leading-relaxed">
                             PPM Minhajul Haq adalah lembaga pendidikan agama Islam yang berlokasi strategis
                             di tengah Kota Bandung. Pesantren ini berdiri di atas lahan seluas lebih dari
-                            <strong className="text-emerald-400"> dua hektar</strong>, dirancang khusus sebagai
+                            <strong className="text-emerald-600"> dua hektar</strong>, dirancang khusus sebagai
                             tempat menuntut ilmu bagi mahasiswa dengan memadukan konsep hunian asrama modern
                             dan nilai-nilai Islami.
                         </p>
 
                         <div className="space-y-4">
                             {[
-                                { icon: CheckCircle, text: 'Kurikulum berbasis Al-Qur\'an dan Al-Hadits' },
+                                { icon: CheckCircle, text: "Kurikulum berbasis Al-Qur'an dan Al-Hadits" },
                                 { icon: CheckCircle, text: 'Dibimbing langsung oleh Ulama ahli' },
                                 { icon: CheckCircle, text: 'Pemisahan (Hijab) dalam kegiatan belajar' },
                             ].map((item, index) => (
                                 <div key={index} className="flex items-center gap-3">
-                                    <item.icon className="w-5 h-5 text-emerald-400 flex-shrink-0" />
-                                    <span className="text-gray-300">{item.text}</span>
+                                    <item.icon className="w-5 h-5 text-emerald-500 flex-shrink-0" />
+                                    <span className="text-gray-600">{item.text}</span>
                                 </div>
                             ))}
                         </div>
@@ -98,50 +137,50 @@ export function AboutSection() {
 
                     {/* Vision & Mission Cards */}
                     <div className="space-y-4">
-                        <GlassCard delay={0.2}>
+                        <WhiteCard delay={0.2}>
                             <div className="flex items-start gap-4">
-                                <div className="p-3 bg-emerald-500/20 rounded-xl">
-                                    <Target className="w-6 h-6 text-emerald-400" />
+                                <div className="p-3 bg-emerald-50 rounded-xl border border-emerald-100">
+                                    <Target className="w-6 h-6 text-emerald-600" />
                                 </div>
                                 <div>
-                                    <h3 className="text-lg font-semibold text-white mb-2">Visi</h3>
-                                    <p className="text-gray-400 text-sm">
+                                    <h3 className="text-lg font-semibold text-gray-800 mb-2">Visi</h3>
+                                    <p className="text-gray-500 text-sm leading-relaxed">
                                         Berkontribusi dalam dakwah dan pemberdayaan masyarakat menuju
                                         kehidupan yang lebih baik.
                                     </p>
                                 </div>
                             </div>
-                        </GlassCard>
+                        </WhiteCard>
 
-                        <GlassCard delay={0.3}>
+                        <WhiteCard delay={0.3}>
                             <div className="flex items-start gap-4">
-                                <div className="p-3 bg-emerald-500/20 rounded-xl">
-                                    <Lightbulb className="w-6 h-6 text-emerald-400" />
+                                <div className="p-3 bg-emerald-50 rounded-xl border border-emerald-100">
+                                    <Lightbulb className="w-6 h-6 text-emerald-600" />
                                 </div>
                                 <div>
-                                    <h3 className="text-lg font-semibold text-white mb-2">Misi</h3>
-                                    <p className="text-gray-400 text-sm">
+                                    <h3 className="text-lg font-semibold text-gray-800 mb-2">Misi</h3>
+                                    <p className="text-gray-500 text-sm leading-relaxed">
                                         Mencetak kader muslim sejati yang memiliki keseimbangan antara
                                         ilmu pengetahuan (akademis) dan agama.
                                     </p>
                                 </div>
                             </div>
-                        </GlassCard>
+                        </WhiteCard>
 
-                        <GlassCard delay={0.4}>
+                        <WhiteCard delay={0.4}>
                             <div className="flex items-start gap-4">
-                                <div className="p-3 bg-emerald-500/20 rounded-xl">
-                                    <Heart className="w-6 h-6 text-emerald-400" />
+                                <div className="p-3 bg-emerald-50 rounded-xl border border-emerald-100">
+                                    <Heart className="w-6 h-6 text-emerald-600" />
                                 </div>
                                 <div>
-                                    <h3 className="text-lg font-semibold text-white mb-2">Karakter</h3>
-                                    <p className="text-gray-400 text-sm">
+                                    <h3 className="text-lg font-semibold text-gray-800 mb-2">Karakter</h3>
+                                    <p className="text-gray-500 text-sm leading-relaxed">
                                         Membentuk karakter luhur, profesional, dan religius dengan tetap
                                         memegang teguh sikap toleransi.
                                     </p>
                                 </div>
                             </div>
-                        </GlassCard>
+                        </WhiteCard>
                     </div>
                 </div>
             </div>
@@ -157,7 +196,7 @@ export function ProgramSection() {
     const programs = [
         {
             icon: BookOpen,
-            title: 'Kajian Al-Qur\'an & Hadits',
+            title: "Kajian Al-Qur'an & Hadits",
             description: 'Kurikulum berbasis Al-Qur\'an dan Al-Hadits dengan metode pembelajaran intensif.',
         },
         {
@@ -178,8 +217,13 @@ export function ProgramSection() {
     ];
 
     return (
-        <section id="program" className="py-24 relative">
-            <div className="absolute inset-0 islamic-pattern opacity-30" />
+        <section id="program" className="py-24 relative bg-emerald-50/40">
+            {/* Islamic geometric pattern faint */}
+            <div className="absolute inset-0 islamic-pattern opacity-[0.04]" />
+            {/* Top border accent */}
+            <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-emerald-300 to-transparent" />
+            <div className="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-emerald-300 to-transparent" />
+
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
                 <motion.div
                     initial={{ opacity: 0, y: 20 }}
@@ -187,24 +231,27 @@ export function ProgramSection() {
                     viewport={{ once: true }}
                     className="text-center mb-16"
                 >
-                    <span className="text-emerald-400 font-medium mb-2 block">Program Kami</span>
-                    <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
+                    <SectionOrnament />
+                    <span className="text-emerald-600 font-semibold mb-2 block tracking-widest text-sm uppercase">
+                        Program Kami
+                    </span>
+                    <h2 className="text-3xl md:text-4xl font-bold text-gray-800 mb-4">
                         Program Pendidikan
                     </h2>
-                    <p className="text-gray-400 max-w-2xl mx-auto">
+                    <p className="text-white-500 max-w-2xl mx-auto">
                         Program pendidikan yang dirancang untuk mencetak generasi Muslim yang berilmu dan berakhlak
                     </p>
                 </motion.div>
 
                 <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
                     {programs.map((program, index) => (
-                        <GlassCard key={index} delay={index * 0.1} className="text-center">
-                            <div className="w-16 h-16 mx-auto mb-4 bg-gradient-to-br from-emerald-500/20 to-emerald-700/20 rounded-2xl flex items-center justify-center">
-                                <program.icon className="w-8 h-8 text-emerald-400" />
+                        <WhiteCard key={index} delay={index * 0.1} className="text-center">
+                            <div className="w-16 h-16 mx-auto mb-4 bg-gradient-to-br from-emerald-50 to-emerald-100 border border-emerald-200 rounded-2xl flex items-center justify-center">
+                                <program.icon className="w-8 h-8 text-emerald-600" />
                             </div>
-                            <h3 className="text-lg font-semibold text-white mb-2">{program.title}</h3>
-                            <p className="text-gray-400 text-sm">{program.description}</p>
-                        </GlassCard>
+                            <h3 className="text-lg font-semibold text-gray-800 mb-2">{program.title}</h3>
+                            <p className="text-gray-500 text-sm leading-relaxed">{program.description}</p>
+                        </WhiteCard>
                     ))}
                 </div>
             </div>
@@ -250,36 +297,40 @@ export function FacilitiesSection() {
     ];
 
     return (
-        <section id="fasilitas" className="py-24 relative">
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <section id="fasilitas" className="py-24 relative bg-white">
+            <div className="absolute inset-0 islamic-pattern opacity-[0.025]" />
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
                 <motion.div
                     initial={{ opacity: 0, y: 20 }}
                     whileInView={{ opacity: 1, y: 0 }}
                     viewport={{ once: true }}
                     className="text-center mb-16"
                 >
-                    <span className="text-emerald-400 font-medium mb-2 block">Fasilitas</span>
-                    <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
+                    <SectionOrnament />
+                    <span className="text-emerald-600 font-semibold mb-2 block tracking-widest text-sm uppercase">
+                        Fasilitas
+                    </span>
+                    <h2 className="text-3xl md:text-4xl font-bold text-gray-800 mb-4">
                         Fasilitas Modern & Islami
                     </h2>
-                    <p className="text-gray-400 max-w-2xl mx-auto">
+                    <p className="text-gray-500 max-w-2xl mx-auto">
                         Dilengkapi fasilitas yang mengedepankan kenyamanan dan nilai-nilai Islami
                     </p>
                 </motion.div>
 
                 <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
                     {facilities.map((facility, index) => (
-                        <GlassCard key={index} delay={index * 0.1}>
+                        <WhiteCard key={index} delay={index * 0.1}>
                             <div className="flex items-start gap-4">
-                                <div className="p-3 bg-emerald-500/20 rounded-xl flex-shrink-0">
-                                    <facility.icon className="w-6 h-6 text-emerald-400" />
+                                <div className="p-3 bg-emerald-50 rounded-xl border border-emerald-100 flex-shrink-0">
+                                    <facility.icon className="w-6 h-6 text-emerald-600" />
                                 </div>
                                 <div>
-                                    <h3 className="text-lg font-semibold text-white mb-1">{facility.title}</h3>
-                                    <p className="text-gray-400 text-sm">{facility.description}</p>
+                                    <h3 className="text-lg font-semibold text-gray-800 mb-1">{facility.title}</h3>
+                                    <p className="text-gray-500 text-sm leading-relaxed">{facility.description}</p>
                                 </div>
                             </div>
-                        </GlassCard>
+                        </WhiteCard>
                     ))}
                 </div>
             </div>
@@ -292,8 +343,10 @@ export function FacilitiesSection() {
 // ============================================
 export function ContactSection() {
     return (
-        <section id="kontak" className="py-24 relative">
-            <div className="absolute inset-0 islamic-pattern opacity-30" />
+        <section id="kontak" className="py-24 relative bg-emerald-50/40">
+            <div className="absolute inset-0 islamic-pattern opacity-[0.04]" />
+            <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-emerald-300 to-transparent" />
+
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
                 <motion.div
                     initial={{ opacity: 0, y: 20 }}
@@ -301,80 +354,78 @@ export function ContactSection() {
                     viewport={{ once: true }}
                     className="text-center mb-16"
                 >
-                    <span className="text-emerald-400 font-medium mb-2 block">Kontak</span>
-                    <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
+                    <SectionOrnament />
+                    <span className="text-emerald-600 font-semibold mb-2 block tracking-widest text-sm uppercase">
+                        Kontak
+                    </span>
+                    <h2 className="text-3xl md:text-4xl font-bold text-gray-800 mb-4">
                         Hubungi Kami
                     </h2>
-                    <p className="text-gray-400 max-w-2xl mx-auto">
+                    <p className="text-white-500 max-w-2xl mx-auto">
                         Kunjungi lokasi kami atau hubungi untuk informasi lebih lanjut
                     </p>
                 </motion.div>
 
                 <div className="grid lg:grid-cols-2 gap-8">
                     {/* Contact Info */}
-                    <div className="space-y-6">
-                        <GlassCard delay={0.1}>
-                            <div className="flex items-start gap-4">
-                                <div className="p-3 bg-emerald-500/20 rounded-xl">
-                                    <MapPin className="w-6 h-6 text-emerald-400" />
-                                </div>
-                                <div>
-                                    <h3 className="text-lg font-semibold text-white mb-1">Alamat</h3>
-                                    <p className="text-gray-400">
+                    <div className="space-y-4">
+                        {[
+                            {
+                                icon: MapPin,
+                                title: 'Alamat',
+                                content: (
+                                    <p className="text-gray-500 text-sm leading-relaxed">
                                         Jl. Bijaksana 2 No. 8, Pasteur<br />
                                         Kecamatan Sukajadi, Kota Bandung<br />
                                         Jawa Barat
                                     </p>
-                                </div>
-                            </div>
-                        </GlassCard>
-
-                        <GlassCard delay={0.2}>
-                            <div className="flex items-start gap-4">
-                                <div className="p-3 bg-emerald-500/20 rounded-xl">
-                                    <Phone className="w-6 h-6 text-emerald-400" />
-                                </div>
-                                <div>
-                                    <h3 className="text-lg font-semibold text-white mb-1">Telepon</h3>
-                                    <p className="text-gray-400">+62 878-8982-7126</p>
-                                </div>
-                            </div>
-                        </GlassCard>
-
-                        <GlassCard delay={0.3}>
-                            <div className="flex items-start gap-4">
-                                <div className="p-3 bg-emerald-500/20 rounded-xl">
-                                    <Mail className="w-6 h-6 text-emerald-400" />
-                                </div>
-                                <div>
-                                    <h3 className="text-lg font-semibold text-white mb-1">Email</h3>
-                                    <p className="text-gray-400">ppmminhajulhaq@gmail.com</p>
-                                </div>
-                            </div>
-                        </GlassCard>
-
-                        <GlassCard delay={0.4}>
-                            <div className="flex items-start gap-4">
-                                <div className="p-3 bg-emerald-500/20 rounded-xl">
-                                    <Youtube className="w-6 h-6 text-emerald-400" />
-                                </div>
-                                <div>
-                                    <h3 className="text-lg font-semibold text-white mb-1">YouTube</h3>
+                                ),
+                                delay: 0.1,
+                            },
+                            {
+                                icon: Phone,
+                                title: 'Telepon',
+                                content: <p className="text-gray-500 text-sm">+62 878-8982-7126</p>,
+                                delay: 0.2,
+                            },
+                            {
+                                icon: Mail,
+                                title: 'Email',
+                                content: <p className="text-gray-500 text-sm">ppmminhajulhaq@gmail.com</p>,
+                                delay: 0.3,
+                            },
+                            {
+                                icon: Youtube,
+                                title: 'YouTube',
+                                content: (
                                     <a
                                         href="https://youtu.be/E0k9bXSnx58?si=tqQqPlSH98MICGJe"
                                         target="_blank"
                                         rel="noopener noreferrer"
-                                        className="text-emerald-400 hover:text-emerald-300 transition"
+                                        className="text-emerald-600 hover:text-emerald-700 text-sm font-medium transition"
                                     >
                                         Lihat Video Profil →
                                     </a>
+                                ),
+                                delay: 0.4,
+                            },
+                        ].map(({ icon: Icon, title, content, delay }) => (
+                            <WhiteCard key={title} delay={delay}>
+                                <div className="flex items-start gap-4">
+                                    <div className="p-3 bg-emerald-50 rounded-xl border border-emerald-100">
+                                        <Icon className="w-6 h-6 text-emerald-600" />
+                                    </div>
+                                    <div>
+                                        <h3 className="text-base font-semibold text-gray-800 mb-1">{title}</h3>
+                                        {content}
+                                    </div>
                                 </div>
-                            </div>
-                        </GlassCard>
+                            </WhiteCard>
+                        ))}
                     </div>
 
                     {/* Map */}
-                    <GlassCard delay={0.2} className="min-h-[400px] p-0 overflow-hidden">
+                    <WhiteCard delay={0.2} className="min-h-[400px] p-0 overflow-hidden">
                         <iframe
                             src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3961.0!2d107.5934!3d-6.8877!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zNsKwNTMnMTUuNyJTIDEwN8KwMzUnMzYuMCJF!5e0!3m2!1sen!2sid!4v1234567890"
                             width="100%"
@@ -383,9 +434,9 @@ export function ContactSection() {
                             allowFullScreen
                             loading="lazy"
                             referrerPolicy="no-referrer-when-downgrade"
-                            className="rounded-3xl"
+                            className="rounded-2xl"
                         />
-                    </GlassCard>
+                    </WhiteCard>
                 </div>
             </div>
         </section>
