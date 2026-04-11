@@ -99,7 +99,9 @@ body {
 }
 
 /* Smooth Scrolling */
+/* Tambahkan ke globals.css — pastikan semua anchor scroll tidak tertutup navbar */
 html {
+  scroll-padding-top: 80px;   /* samakan dengan NAVBAR_HEIGHT di Navbar.tsx */
   scroll-behavior: smooth;
 }
 
