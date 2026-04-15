@@ -54,13 +54,95 @@ function SectionOrnament() {
     );
 }
 
+// ── Daftar kampus ────────────────────────────────────────────────────────────
+const kampusList = [
+    { nama: 'Institut Teknologi Bandung',               singkatan: 'ITB',          logo: '/img/ITB.png' },
+    { nama: 'Universitas Pendidikan Indonesia',         singkatan: 'UPI',          logo: '/img/upi.png' },
+    { nama: 'Politeknik Manufaktur Negeri Bandung',     singkatan: 'POLMAN',       logo: '/img/polman.png' },
+    { nama: 'Politeknik Negeri Bandung',                singkatan: 'POLBAN',       logo: '/img/polban.png' },
+    { nama: 'Poltekkes Kemenkes Bandung',               singkatan: 'POLTEKKES',    logo: '/img/poltekkes.png' },
+    { nama: 'Politeknik Kesejahteraan Sosial',          singkatan: 'POLTEKESOS',   logo: '/img/poltekesos.png' },
+    { nama: 'Sekolah Tinggi Teknologi Tekstil',         singkatan: 'STTT',         logo: '/img/sttt.png' },
+    { nama: 'Universitas Pasundan',                     singkatan: 'UNPAS',        logo: '/img/unpas.png' },
+    { nama: 'Universitas Islam Bandung',                singkatan: 'UNISBA',       logo: '/img/unisba.png' },
+    { nama: 'Universitas Logistik & Bisnis Indonesia',  singkatan: 'ULBI',         logo: '/img/ulbi.png' },
+    { nama: 'Institut Teknologi Nasional Bandung',      singkatan: 'ITENAS',       logo: '/img/itenas.png' },
+    { nama: 'Universitas Komputer Indonesia',           singkatan: 'UNIKOM',       logo: '/img/unikom.png' },
+    { nama: 'Universitas Sangga Buana YPKP',            singkatan: 'USB YPKP',     logo: '/img/USB_YPKP_Logo.png' },
+    { nama: 'Universitas Terbuka',                      singkatan: 'UT',           logo: '/img/UT.png' },
+];
+
+// ── Marquee strip kampus ─────────────────────────────────────────────────────
+function KampusMarquee() {
+    // Duplikat 3x agar loop seamless
+    const items = [...kampusList, ...kampusList, ...kampusList];
+
+    return (
+        <div className="relative overflow-hidden">
+            {/* Fade kiri & kanan */}
+            <div className="absolute left-0 top-0 bottom-0 w-20 z-10 bg-gradient-to-r from-white to-transparent pointer-events-none" />
+            <div className="absolute right-0 top-0 bottom-0 w-20 z-10 bg-gradient-to-l from-white to-transparent pointer-events-none" />
+
+            <div className="flex gap-6 w-max animate-marquee">
+                {items.map((k, i) => (
+                    <div
+                        key={i}
+                        className="flex flex-col items-center gap-4 px-6 py-6 bg-white border border-emerald-100 rounded-3xl shadow-sm hover:shadow-xl hover:border-emerald-400 hover:-translate-y-1 transition-all cursor-default select-none"
+                        style={{ minWidth: '220px', maxWidth: '220px' }}
+                    >
+                        {/* Logo */}
+                        <div className="w-28 h-28 rounded-2xl overflow-hidden flex items-center justify-center bg-emerald-50 border-2 border-emerald-100 flex-shrink-0">
+                            <img
+                                src={k.logo}
+                                alt={k.singkatan}
+                                className="w-full h-full object-contain p-2"
+                                onError={(e) => {
+                                    const target = e.currentTarget;
+                                    target.style.display = 'none';
+                                    const parent = target.parentElement;
+                                    if (parent && !parent.querySelector('span')) {
+                                        const span = document.createElement('span');
+                                        span.className = 'text-emerald-600 font-bold text-lg text-center leading-tight';
+                                        span.textContent = k.singkatan;
+                                        parent.appendChild(span);
+                                    }
+                                }}
+                            />
+                        </div>
+                        {/* Singkatan / badge */}
+                        <span className="text-sm font-bold text-emerald-700 bg-emerald-50 border border-emerald-200 rounded-full px-3 py-1 tracking-wide">
+                            {k.singkatan}
+                        </span>
+                        {/* Nama lengkap */}
+                        <p className="text-sm text-gray-700 font-semibold text-center leading-snug">
+                            {k.nama}
+                        </p>
+                    </div>
+                ))}
+            </div>
+
+            <style jsx>{`
+                @keyframes marquee {
+                    0%   { transform: translateX(0); }
+                    100% { transform: translateX(calc(-100% / 3)); }
+                }
+                .animate-marquee {
+                    animation: marquee 45s linear infinite;
+                }
+                .animate-marquee:hover {
+                    animation-play-state: paused;
+                }
+            `}</style>
+        </div>
+    );
+}
+
 // ============================================
 // ABOUT SECTION
 // ============================================
 export function AboutSection() {
     return (
         <section id="profil" className="py-24 relative bg-white">
-            {/* Subtle top pattern strip */}
             <div className="absolute inset-0 islamic-pattern opacity-[0.025]" />
 
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
@@ -105,7 +187,7 @@ export function AboutSection() {
                     </div>
                 </motion.div>
 
-                <div className="grid md:grid-cols-2 gap-8 items-center">
+                <div className="grid md:grid-cols-2 gap-8 items-center mb-16">
                     {/* Description */}
                     <motion.div
                         initial={{ opacity: 0, x: -30 }}
@@ -183,6 +265,30 @@ export function AboutSection() {
                         </WhiteCard>
                     </div>
                 </div>
+
+                {/* ── Kampus Marquee ── */}
+                <motion.div
+                    initial={{ opacity: 0, y: 24 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 0.6 }}
+                >
+                    {/* Header kampus */}
+                    <div className="text-center mb-8">
+                        <p className="text-emerald-600 font-semibold tracking-widest text-sm uppercase mb-2">
+                            Santri Kami Berasal Dari
+                        </p>
+                        <h3 className="text-2xl md:text-3xl font-bold text-gray-800 mb-2">
+                            Kampus-kampus Ternama Sekitar
+                        </h3>
+                        {/* Garis bawah judul */}
+                        <div className="flex justify-center">
+                            <div className="h-0.5 w-24 bg-gradient-to-r from-emerald-400 to-emerald-600 rounded-full" />
+                        </div>
+                    </div>
+
+                    <KampusMarquee />
+                </motion.div>
             </div>
         </section>
     );
@@ -197,7 +303,7 @@ export function ProgramSection() {
         {
             icon: BookOpen,
             title: "Kajian Al-Qur'an & Hadits",
-            description: 'Kurikulum berbasis Al-Qur\'an dan Al-Hadits dengan metode pembelajaran intensif.',
+            description: "Kurikulum berbasis Al-Qur'an dan Al-Hadits dengan metode pembelajaran intensif.",
         },
         {
             icon: Users,
@@ -218,9 +324,7 @@ export function ProgramSection() {
 
     return (
         <section id="program" className="py-24 relative bg-emerald-50/40">
-            {/* Islamic geometric pattern faint */}
             <div className="absolute inset-0 islamic-pattern opacity-[0.04]" />
-            {/* Top border accent */}
             <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-emerald-300 to-transparent" />
             <div className="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-emerald-300 to-transparent" />
 
@@ -238,7 +342,7 @@ export function ProgramSection() {
                     <h2 className="text-3xl md:text-4xl font-bold text-gray-800 mb-4">
                         Program Pendidikan
                     </h2>
-                    <p className="text-white-500 max-w-2xl mx-auto">
+                    <p className="text-white-500 max-w-1xl mx-100">
                         Program pendidikan yang dirancang untuk mencetak generasi Muslim yang berilmu dan berakhlak
                     </p>
                 </motion.div>

@@ -115,7 +115,7 @@ export function Navbar() {
                             onHero ? 'bg-white/20 border border-white/30 backdrop-blur-sm'
                                    : 'bg-white border border-emerald-100'
                         )}>
-                            <Image src="/img/logo.png" width={40} height={40} alt="logo" />
+                            <Image src="/img/LOGO PPM WHITE BG.png" width={40} height={40} alt="logo" />
                         </div>
                         <div>
                             <h1 className={cn(

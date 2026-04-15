@@ -18,7 +18,7 @@ const photos = [
         desc: 'Keluarga besar santri putra bersama dewan Guru',
     },
     {
-        src: '/img/kegiatan.jpg',
+        src: '/img/kegiatan.jpg',   // simpan file sebagai kegiatan.jpg (lowercase)
         label: 'Kegiatan Bersama',
         desc: 'Kegiatan outdoor seluruh santri PPM Minhajul Haq',
     },
